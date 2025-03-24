@@ -11,7 +11,7 @@
         referrerpolicy="no-referrer"
     />
     @vite('resources/css/app.css')
-    @vite('resources/js/top-menu')
+    @vite('resources/js/top-menu.js')
     <title>{{ isset($title) ? 'Find Your Dream Job | ' . $title :  'Find Your Dream Job' }}</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
