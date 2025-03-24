@@ -9,15 +9,7 @@
             <x-nav-link href="{{url('/login')}}" title="Login" currentUrl="login" />
             <x-nav-link href="{{url('/register')}}" title="Register" currentUrl="register" />
             <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1" />
-            <a
-                href="{{ url('/jobs/create') }}"
-                class="
-                text-white bg-black hover:bg-green-800 px-4 py-2 rounded hover:shadow-md transition duration-300
-                {{ request()->is('jobs/create') ? 'bg-green-800 hover:text-white px-4 py-2 rounded hover:shadow-md transition duration-300' :  ''}}
-                "
-            >
-                <i class="fa fa-edit"></i> Create Job
-            </a>
+            <x-button-link url='/jobs/create' icon='edit' isActive="true">Create Job</x-button-link>
         </nav>
         <button
             id="hamburger"
@@ -29,35 +21,14 @@
     <!-- Mobile Menu -->
     <nav
         id="mobile-menu"
-        class="hidden md:hidden bg-blue-900 text-white mt-5 pb-4 space-y-2"
+        class="hidden md:hidden bg-green-600 text-white mt-5 pb-4 space-y-2"
     >
-        <a href="{{ url('/jobs') }}" class="block px-4 py-2 hover:bg-blue-700"
-        >All Jobs</a
-        >
-        <a
-            href="{{ url('/jobs/saved') }}"
-            class="block px-4 py-2 hover:bg-blue-700"
-        >Saved Jobs</a
-        >
-        <a href="{{ url('/login') }}" class="block px-4 py-2 hover:bg-blue-700"
-        >Login</a
-        >
-        <a
-            href="{{ url('/jobs/register') }}"
-            class="block px-4 py-2 hover:bg-blue-700"
-        >Register</a
-        >
-        <a
-            href="{{ url('/dashboard') }}"
-            class="block text-white hover:underline py-2"
-        >
-            <i class="fa fa-gauge mr-1"></i> Dashboard
-        </a>
-        <a
-            href="{{ url('/jobs/create') }}"
-            class="block px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black"
-        >
-            <i class="fa fa-edit"></i> Create Job
-        </a>
+        <x-nav-link href="{{url('/')}}" title="Home" currentUrl="/" isMobile="true" />
+        <x-nav-link href="{{url('/jobs')}}" title="All Jobs" currentUrl="jobs" isMobile="true" />
+        <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved" isMobile="true" />
+        <x-nav-link href="{{url('/login')}}" title="Login" currentUrl="login" isMobile="true" />
+        <x-nav-link href="{{url('/register')}}" title="Register" currentUrl="register" isMobile="true" />
+        <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1" isMobile="true" />
+        <x-nav-link href="{{url('/jobs/create')}}" title="Create Job" currentUrl="jobs/create" icon="fa fa-edit mr-1" isMobile="true" />
     </nav>
 </header>

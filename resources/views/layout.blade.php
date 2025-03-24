@@ -11,6 +11,7 @@
         referrerpolicy="no-referrer"
     />
     @vite('resources/css/app.css')
+    @vite('resources/js/top-menu')
     <title>{{ isset($title) ? 'Find Your Dream Job | ' . $title :  'Find Your Dream Job' }}</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -18,6 +19,10 @@
 </head>
     <body class="bg-gray-100">
         <x-header/>
+        @if(request()->is('/'))
+            <x-home-page-bg />
+            <x-home-page-top-banner />
+        @endif
         <main class="container mx-auto pr mt-4">
             {{ $slot }}
         </main>
