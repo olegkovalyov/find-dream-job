@@ -1,4 +1,4 @@
 <x-layout>
-    <x-slot name="title">Current job</x-slot>
-    <h1>Show Job {{$id}}</h1>
+    <h1 class="text-2xl">{{$job->title}}</h1>
+    <p>{{$job->description}}</p>
 </x-layout>
