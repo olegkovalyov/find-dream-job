@@ -4,45 +4,11 @@
             <a href="{{ url('/') }}">Find Dream Job</a>
         </h1>
         <nav class="hidden md:flex items-center space-x-4">
-            <a
-                href="{{ url('/jobs') }}"
-               class="
-               text-white hover:bg-green-800 px-4 py-2 rounded hover:shadow-md transition duration-300
-               {{ request()->is('jobs') ? 'bg-green-800 hover:text-white px-4 py-2 rounded hover:shadow-md transition duration-300' :  ''}}"
-            >All Jobs</a
-            >
-            <a
-                href="{{ url('jobs/saved') }}"
-                class="
-                text-white hover:bg-green-800 px-4 py-2 rounded hover:shadow-md transition duration-300
-                {{ request()->is('jobs/saved') ? 'bg-green-800 hover:text-white px-4 py-2 rounded hover:shadow-md transition duration-300' :  ''}}
-                "
-            >Saved Jobs</a
-            >
-            <a href="{{ url('login') }}"
-                 class="
-                 text-white hover:bg-green-800 px-4 py-2 rounded hover:shadow-md transition duration-300
-                 {{ request()->is('login') ? 'bg-green-800 hover:text-white px-4 py-2 rounded hover:shadow-md transition duration-300' :  ''}}
-            "
-            >Login</a
-            >
-            <a
-                href="{{ url('/register') }}"
-                class="
-                text-white hover:bg-green-800 px-4 py-2 rounded hover:shadow-md transition duration-300
-                {{ request()->is('register') ? 'bg-green-800 hover:text-white px-4 py-2 rounded hover:shadow-md transition duration-300' :  ''}}
-                "
-            >Register</a
-            >
-            <a
-                href="{{ url('/dashboard') }}"
-                class="
-                text-white hover:bg-green-800 px-4 py-2 rounded hover:shadow-md transition duration-300
-                {{ request()->is('register') ? 'bg-green-800 hover:text-white px-4 py-2 rounded hover:shadow-md transition duration-300' :  ''}}
-                "
-            >
-                <i class="fa fa-gauge mr-1"></i> Dashboard
-            </a>
+            <x-nav-link href="{{url('/jobs')}}" title="All Jobs" currentUrl="jobs" />
+            <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved" />
+            <x-nav-link href="{{url('/login')}}" title="Login" currentUrl="login" />
+            <x-nav-link href="{{url('/register')}}" title="Register" currentUrl="register" />
+            <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1" />
             <a
                 href="{{ url('/jobs/create') }}"
                 class="
