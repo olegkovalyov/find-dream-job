@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -56,7 +57,7 @@ class JobController extends Controller
         ]);
 
         // Hardcoded user ID
-        $validatedData['user_id'] = 1;
+        $validatedData['user_id'] = Auth::user()->getAuthIdentifier();
 
         if ($request->hasFile('company_logo')) {
             // Store the file and get path
@@ -71,13 +72,21 @@ class JobController extends Controller
             ->with('success', 'Job listing created successfully!');
     }
 
-    public function edit(Job $job): View
+    public function edit(Job $job): View | RedirectResponse
     {
+        if (Auth::user()->getAuthIdentifier() !== $job->user_id) {
+            return redirect()->route('jobs.index')->with('error', 'You have no access');
+        }
+
         return view('jobs.edit', compact('job'));
     }
 
     public function update(Request $request, Job $job): string
     {
+        if (Auth::user()->getAuthIdentifier() !== $job->user_id) {
+            return redirect()->route('jobs.index')->with('error', 'You have no access');
+        }
+
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -119,7 +128,6 @@ class JobController extends Controller
 
     public function destroy(Job $job): RedirectResponse
     {
-        // If logo, then delete it
         if ($job->company_logo) {
             $path = '/company-logos/'.$job->company_logo;
             Storage::disk('local')->delete($path);

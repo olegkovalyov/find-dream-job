@@ -9,11 +9,11 @@
                 <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved"/>
                 <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1"/>
                 <x-nav-link href="{{url('/logout')}}" title="Logout" currentUrl="logout"/>
-                <x-button-link url='/jobs/create' icon='edit' isActive="true">Create Job</x-button-link>
             @else
                 <x-nav-link href="{{url('/login')}}" title="Login" currentUrl="login"/>
                 <x-nav-link href="{{url('/register')}}" title="Register" currentUrl="register"/>
-            @endif
+             @endif
+                <x-button-link url='/jobs/create' icon='edit' isActive="true">Create Job</x-button-link>
         </nav>
         <button
             id="hamburger"
@@ -33,10 +33,10 @@
             <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved" isMobile="true"/>
             <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1" isMobile="true"/>
             <x-nav-link href="{{url('/logout')}}" title="Logout" currentUrl="logout" isMobile="true"/>
-            <x-nav-link href="{{url('/jobs/create')}}" title="Create Job" currentUrl="jobs/create" icon="fa fa-edit mr-1" isMobile="true"/>
         @else
             <x-nav-link href="{{url('/login')}}" title="Login" currentUrl="login" isMobile="true"/>
             <x-nav-link href="{{url('/register')}}" title="Register" currentUrl="register" isMobile="true"/>
         @endif
+        <x-nav-link href="{{url('/jobs/create')}}" title="Create Job" currentUrl="jobs/create" icon="fa fa-edit mr-1" isMobile="true"/>
     </nav>
 </header>
