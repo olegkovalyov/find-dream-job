@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/top-menu.js',
+                'resources/js/alert-notification.js',
             ],
             refresh: true,
         }),

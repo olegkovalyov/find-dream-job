@@ -12,6 +12,7 @@
     />
     @vite('resources/css/app.css')
     @vite('resources/js/top-menu.js')
+    @vite('resources/js/alert-notification.js')
     <title>{{ isset($title) ? 'Find Your Dream Job | ' . $title :  'Find Your Dream Job' }}</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -24,6 +25,12 @@
             <x-home-page-top-banner />
         @endif
         <main class="container mx-auto pr mt-4">
+            @if(session('success'))
+                <x-alert type="success" message="{{session('success')}}" />
+            @endif
+            @if(session('error'))
+                <x-alert type="error" message="{{session('error')}}" />
+            @endif
             {{ $slot }}
         </main>
     </body>

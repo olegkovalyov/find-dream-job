@@ -24,3 +24,8 @@
 .work {
     background-image: url("../images/work.jpg");
 }
+
+.hide-alert {
+    transform: scaleY(0);
+    transition: transform 400ms ease 0ms;
+}
