@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard.index');
+
+    Route::get('/jobs/search', [JobController::class, 'search'])
+        ->name('jobs.search');
+
     Route::resource('/jobs', JobController::class);
+
     Route::put('/profile', [ProfileController::class, 'update'])
         ->name('profile.update');
     Route::get('/bookmarks', [BookmarkController::class, 'index'])
@@ -28,6 +33,8 @@ Route::middleware('auth')->group(function () {
         ->name('applicant.store');
     Route::get('/download/resume/{filename}', [ApplicantController::class, 'download'])
         ->name('applicant.download');
+    Route::delete('/applicants/{applicant}', [ApplicantController::class, 'destroy'])
+        ->name('applicant.destroy');
 });
 
 Route::middleware('guest')->group(function () {

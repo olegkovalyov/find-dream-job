@@ -55,7 +55,7 @@
 
 
                 {{-- Applicants --}}
-                <div class="mt-4">
+                <div class="mt-4 bg-gray-100 p-2">
                     <h4 class="text-lg font-semibold mb-2">Applicants</h4>
                     @forelse($job->applicants as $applicant)
                         <x-applicant-card :applicant="$applicant" />

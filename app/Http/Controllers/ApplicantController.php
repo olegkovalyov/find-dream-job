@@ -14,6 +14,14 @@ class ApplicantController extends Controller
 
     public function store(Request $request, Job $job): RedirectResponse
     {
+        $existingApplication = Applicant::where('job_id', $job->id)
+            ->where('user_id', auth()->id())
+            ->exists();
+
+        if ($existingApplication) {
+            return redirect()->back()->with('error', 'You have already applied to this job');
+        }
+
         // Validate incoming data
         $validatedData = $request->validate([
             'full_name' => 'required|string',
@@ -39,7 +47,14 @@ class ApplicantController extends Controller
         return redirect()->back()->with('success', 'Your application has been submitted');
     }
 
-    public function download(int $applicantId): RedirectResponse | StreamedResponse
+    public function destroy($id): RedirectResponse
+    {
+        $applicant = Applicant::findOrFail($id);
+        $applicant->delete();
+        return redirect()->route('dashboard.index')->with('success', 'Applicant deleted successfully!');
+    }
+
+    public function download(int $applicantId): RedirectResponse|StreamedResponse
     {
         $applicant = Applicant::find($applicantId);
         if (!$applicantId) {
