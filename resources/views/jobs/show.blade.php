@@ -95,7 +95,7 @@
                 Company Info
             </h3>
             @if($job->company_logo)
-                <img src="/images/company-logos/{{$job->company_logo}}" alt="Ad" class="w-full rounded-lg mb-4 m-auto" />
+                <img src="/images/company-logos/{{$job->company_logo}}" alt="Ad" class="w-full rounded-lg mb-4 m-auto"/>
             @endif
             <h4 class="text-lg font-bold">{{$job->company_name}}</h4>
             @if($job->company_description)
@@ -106,13 +106,23 @@
             @if($job->company_website)
                 <a href="{{$job->company_website}}" target="_blank" class="text-blue-500">Visit Website</a>
             @endif
-            <form method="POST" action="{{route('bookmarks.store')}}" class="mt-10">
+            <form method="POST"
+                  action="{{auth()->user()->bookmarkedJobs()->where('job_id', $job->id)->exists() ? route('bookmarks.destroy') : route('bookmarks.store')}}"
+                  class="mt-10">
                 @csrf
                 <input type="hidden" name="jobId" value="{{$job->id}}">
-                <button
-                    class="cursor-pointer bg-green-500 hover:bg-green-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center">
-                    <i class="fas fa-bookmark mr-3"></i> Bookmark Listing
-                </button>
+                @if(auth()->user()->bookmarkedJobs()->where('job_id', $job->id)->exists())
+                    @method('DELETE')
+                    <button
+                        class="cursor-pointer bg-red-500 hover:bg-red-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center">
+                        <i class="fas fa-bookmark mr-3"></i> Remove Bookmark
+                    </button>
+                @else
+                    <button
+                        class="cursor-pointer bg-green-500 hover:bg-green-600 text-white font-bold w-full py-2 px-4 rounded-full flex items-center justify-center">
+                        <i class="fas fa-bookmark mr-3"></i> Bookmark Listing
+                    </button>
+                @endif
             </form>
         </aside>
     </div>
