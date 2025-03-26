@@ -68,7 +68,7 @@ class JobController extends Controller
 
         Job::create($validatedData);
 
-        return redirect()->route('jobs.index')
+        return redirect()->route('dashboard.index')
             ->with('success', 'Job listing created successfully!');
     }
 
@@ -123,7 +123,7 @@ class JobController extends Controller
         // Submit to database
         $job->update($validatedData);
 
-        return redirect()->route('jobs.index')->with('success', 'Job listing updated successfully!');
+        return redirect()->route('dashboard.index')->with('success', 'Job listing updated successfully!');
     }
 
     public function destroy(Job $job): RedirectResponse
@@ -134,6 +134,11 @@ class JobController extends Controller
         }
 
         $job->delete();
+
+        // Check if request came from the dashboard
+        if (request()->query('from') == 'dashboard') {
+            return redirect()->route('dashboard')->with('success', 'Job listing deleted successfully!');
+        }
 
         return redirect()->route('jobs.index')->with('success', 'Job listing deleted successfully!');
     }

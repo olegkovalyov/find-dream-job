@@ -7,7 +7,17 @@
             @if(auth()->user())
                 <x-nav-link href="{{url('/jobs')}}" title="All Jobs" currentUrl="jobs"/>
                 <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved"/>
-                <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1"/>
+                <div class="flex items-center space-x-3">
+                    <a href="{{route('dashboard.index')}}">
+                        @if(Auth::user()->avatar)
+                            <img src="/images/avatars/{{ Auth::user()->avatar }}"  alt="{{Auth::user()->name}}"
+                                 class="w-10 h-10 rounded-full">
+                        @else
+                            <img src="/images/avatars/default-avatar.png" alt="{{Auth::user()->name}}"
+                                 class="w-10 h-10 rounded-full">
+                        @endif
+                    </a>
+                </div>
                 <x-nav-link href="{{url('/logout')}}" title="Logout" currentUrl="logout"/>
             @else
                 <x-nav-link href="{{url('/login')}}" title="Login" currentUrl="login"/>
