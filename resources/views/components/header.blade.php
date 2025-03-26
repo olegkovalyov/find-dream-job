@@ -6,7 +6,7 @@
         <nav class="hidden md:flex items-center space-x-4">
             @if(auth()->user())
                 <x-nav-link href="{{url('/jobs')}}" title="All Jobs" currentUrl="jobs"/>
-                <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved"/>
+                <x-nav-link href="{{url('/bookmarks')}}" title="Saved Jobs" currentUrl="bookmarks"/>
                 <div class="flex items-center space-x-3">
                     <a href="{{route('dashboard.index')}}">
                         @if(Auth::user()->avatar)
@@ -40,7 +40,7 @@
         <x-nav-link href="{{url('/')}}" title="Home" currentUrl="/" isMobile="true"/>
         @if(auth()->user())
             <x-nav-link href="{{url('/jobs')}}" title="All Jobs" currentUrl="jobs" isMobile="true"/>
-            <x-nav-link href="{{url('/jobs/saved')}}" title="Saved Jobs" currentUrl="jobs/saved" isMobile="true"/>
+            <x-nav-link href="{{url('/bookmarks')}}" title="Saved Jobs" currentUrl="bookmarks" isMobile="true"/>
             <x-nav-link href="{{url('/dashboard')}}" title="Dashboard" currentUrl="dashboard" icon="fa fa-gauge mr-1" isMobile="true"/>
             <x-nav-link href="{{url('/logout')}}" title="Logout" currentUrl="logout" isMobile="true"/>
         @else

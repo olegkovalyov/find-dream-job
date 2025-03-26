@@ -13,7 +13,7 @@ class JobController extends Controller
 {
     public function index(): View
     {
-        $jobs = Job::paginate(6);
+        $jobs = Job::latest()->paginate(9);
 
         return view('jobs.index', compact('jobs'));
     }
@@ -72,7 +72,7 @@ class JobController extends Controller
             ->with('success', 'Job listing created successfully!');
     }
 
-    public function edit(Job $job): View | RedirectResponse
+    public function edit(Job $job): View|RedirectResponse
     {
         if (Auth::user()->getAuthIdentifier() !== $job->user_id) {
             return redirect()->route('jobs.index')->with('error', 'You have no access');
