@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GeocodeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\ProfileController;
@@ -48,3 +49,5 @@ Route::middleware('guest')->group(function () {
 
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
+
+Route::get('/geocode', [GeocodeController::class, 'geocode']);

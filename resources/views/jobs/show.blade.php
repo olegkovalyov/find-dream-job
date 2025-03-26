@@ -124,3 +124,4 @@
         </aside>
     </div>
 </x-layout>
+<x-mapbox :job="$job" />
