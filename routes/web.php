@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookmarkController;
@@ -23,6 +24,8 @@ Route::middleware('auth')->group(function () {
         ->name('bookmarks.destroy');
     Route::get('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+    Route::post('/jobs/{job}/apply', [ApplicantController::class, 'store'])
+        ->name('applicant.store');
 });
 
 Route::middleware('guest')->group(function () {
