@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
     Route::post('/jobs/{job}/apply', [ApplicantController::class, 'store'])
         ->name('applicant.store');
+    Route::get('/download/resume/{filename}', [ApplicantController::class, 'download'])
+        ->name('applicant.download');
 });
 
 Route::middleware('guest')->group(function () {

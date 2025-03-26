@@ -52,6 +52,18 @@
                         <!-- End Delete Form -->
                     </div>
                 </div>
+
+
+                {{-- Applicants --}}
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Applicants</h4>
+                    @forelse($job->applicants as $applicant)
+                        <x-applicant-card :applicant="$applicant" />
+                    @empty
+                        <p class="text-gray-700">No applicants for this job</p>
+                    @endforelse
+                </div>
+
             @empty
                 <p class="text-gray-700">You have not job listings</p>
             @endforelse

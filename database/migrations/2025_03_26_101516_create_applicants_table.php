@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('contact_email');
             $table->text('message')->nullable();
             $table->string('location')->nullable();
-            $table->string('resume_path');
+            $table->string('resume');
             $table->timestamps();
         });
     }

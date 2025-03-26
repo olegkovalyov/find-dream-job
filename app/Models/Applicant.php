@@ -18,7 +18,7 @@ class Applicant extends Model
         'contact_email',
         'message',
         'location',
-        'resume_path',
+        'resume',
     ];
 
     public function job(): BelongsTo
