@@ -21,6 +21,16 @@
     z-index: 1;
 }
 
+.modal {
+    background-color: rgba(0, 0, 0, 0.7); /* Adjust opacity as needed */
+    z-index: 1;
+}
+
+.modal-container {
+    position: absolute;
+    top: 0;
+}
+
 .work {
     background-image: url("../images/work.jpg");
 }
@@ -28,4 +38,15 @@
 .hide-alert {
     transform: scaleY(0);
     transition: transform 400ms ease 0ms;
+}
+
+#map {
+    width: 100%;
+    height: 400px;
+    z-index: 1;
+}
+
+#applicant-form {
+    position: relative;
+    z-index: 2;
 }

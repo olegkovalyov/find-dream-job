@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobStoreRequest;
+use App\Http\Requests\JobUpdateRequest;
 use App\Models\Job;
-use Illuminate\Http\Request;
+use App\Services\Contracts\JobServiceInterface;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class JobController extends Controller
 {
+    public function __construct(
+        private readonly JobServiceInterface $jobService
+    ) {
+    }
+
     public function index(): View
     {
-        $jobs = Job::all();
-
+        $jobs = $this->jobService->loadLatest();
         return view('jobs.index', compact('jobs'));
     }
 
@@ -31,43 +39,83 @@ class JobController extends Controller
         return view('jobs.show', compact('job'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(JobStoreRequest $request): RedirectResponse
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'salary' => 'required|integer',
-            'tags' => 'nullable|string',
-            'job_type' => 'required|string',
-            'remote' => 'required|boolean',
-            'requirements' => 'nullable|string',
-            'benefits' => 'nullable|string',
-            'address' => 'nullable|string',
-            'city' => 'required|string',
-            'state' => 'required|string',
-            'zipcode' => 'nullable|string',
-            'contact_email' => 'required|string',
-            'contact_phone' => 'nullable|string',
-            'company_name' => 'required|string',
-            'company_description' => 'nullable|string',
-            'company_logo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
-            'company_website' => 'nullable|url'
-        ]);
+        $this->jobService->create($request);
 
-        // Hardcoded user ID
-        $validatedData['user_id'] = 1;
+        return redirect()->route('dashboard.index')
+            ->with('success', 'Job listing created successfully!');
+    }
 
-        if ($request->hasFile('company_logo')) {
-            // Store the file and get path
-            $path = $request->file('company_logo')->store('company-logos', 'public');
+    public function edit(Job $job): View|RedirectResponse
+    {
+        if (!$this->isAllowedForAction($job->user_id)) {
+            return redirect()->route('jobs.index')
+                ->with('error', 'You have no access');
+        }
+        return view('jobs.edit', compact('job'));
+    }
 
-            // Add path to validated data
-            $validatedData['company_logo'] = $path;
+    public function update(JobUpdateRequest $request, Job $job): string
+    {
+        if (!$this->isAllowedForAction($job->user_id)) {
+            return redirect()->route('jobs.index')
+                ->with('error', 'You have no access');
+        }
+        $this->jobService->update($request, $job);
+        return redirect()->route('dashboard.index')
+            ->with('success', 'Job listing updated successfully!');
+    }
+
+    public function destroy(Job $job): RedirectResponse
+    {
+        if (!$this->isAllowedForAction($job->user_id)) {
+            return redirect()->route('jobs.index')
+                ->with('error', 'You have no access');
         }
 
-        Job::create($validatedData);
+        $this->jobService->delete($job);
+        if (request()->query('from') == 'dashboard') {
+            return redirect()->route('dashboard')
+                ->with('success', 'Job listing deleted successfully!');
+        }
 
         return redirect()->route('jobs.index')
-            ->with('success', 'Job listing created successfully!');
+            ->with('success', 'Job listing deleted successfully!');
+    }
+
+
+    public function search(Request $request): View
+    {
+        $keywords = strtolower($request->input('keywords'));
+        $location = strtolower($request->input('location'));
+
+        $query = Job::query();
+
+        if ($keywords) {
+            $query->where(function ($q) use ($keywords) {
+                $q->whereRaw('LOWER(title) like ?', ['%'.$keywords.'%'])
+                    ->orWhereRaw('LOWER(description) like ?', ['%'.$keywords.'%'])
+                    ->orWhereRaw('LOWER(tags) like ?', ['%'.$keywords.'%']);
+            });
+        }
+
+        if ($location) {
+            $query->where(function ($q) use ($location) {
+                $q->whereRaw('LOWER(address) like ?', ['%'.$location.'%'])
+                    ->orWhereRaw('LOWER(city) like ?', ['%'.$location.'%'])
+                    ->orWhereRaw('LOWER(state) like ?', ['%'.$location.'%'])
+                    ->orWhereRaw('LOWER(zipcode) like ?', ['%'.$location.'%']);
+            });
+        }
+
+        $jobs = $query->paginate(9);
+
+        return view('jobs.index')->with('jobs', $jobs);
+    }
+
+    protected function isAllowedForAction(int $userId): bool
+    {
+        return Auth::user()->getAuthIdentifier() === $userId;
     }
 }
