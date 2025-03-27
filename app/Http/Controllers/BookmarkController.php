@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Bookmark\BookmarkCreateRequest;
 use App\Models\Job;
+use App\Services\Contracts\BookmarkServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,16 +12,18 @@ use Illuminate\View\View;
 
 class BookmarkController extends Controller
 {
+    public function __construct(
+        private readonly BookmarkServiceInterface $bookmarkService
+    ) {
+    }
 
     public function index(): View
     {
-        $user = Auth::user();
-
-        $bookmarks = $user->bookmarkedJobs()->orderBy('job_user_bookmarks.created_at', 'desc')->paginate(6);
+        $bookmarks = $this->bookmarkService->loadBookmarksForDashboard();
         return view('jobs.bookmarked')->with('bookmarks', $bookmarks);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(BookmarkCreateRequest $request): RedirectResponse
     {
         $user = Auth::user();
         $jobId = (int) $request->input('jobId');

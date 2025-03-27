@@ -2,10 +2,11 @@
 
 namespace App\Services\Concrete;
 
-use App\Http\Requests\JobStoreRequest;
-use App\Http\Requests\JobUpdateRequest;
+use App\Http\Requests\Job\JobStoreRequest;
+use App\Http\Requests\Job\JobUpdateRequest;
 use App\Models\Job;
 use App\Services\Contracts\JobServiceInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +19,26 @@ class JobService implements JobServiceInterface
     public function loadLatest(): LengthAwarePaginator
     {
         return Job::latest()->paginate(9);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function loadForHomePage(): Collection
+    {
+        return Job::latest()->limit(6)->get();
+    }
+
+    /**
+     * @param  int  $userId
+     * @return Collection
+     */
+    public function loadJobsForUserWithApplicants(int $userId): Collection
+    {
+        $jobs = Job::where('user_id', $userId)
+            ->with('applicants')
+            ->get();
+        return $jobs;
     }
 
     public function create(JobStoreRequest $request): void
@@ -90,5 +111,29 @@ class JobService implements JobServiceInterface
             Storage::disk('local')->delete($path);
         }
         $job->delete();
+    }
+
+    public function search(string $location, string $keywords): LengthAwarePaginator
+    {
+        $query = Job::query();
+
+        if ($keywords) {
+            $query->where(function ($q) use ($keywords) {
+                $q->whereRaw('LOWER(title) like ?', ['%'.$keywords.'%'])
+                    ->orWhereRaw('LOWER(description) like ?', ['%'.$keywords.'%'])
+                    ->orWhereRaw('LOWER(tags) like ?', ['%'.$keywords.'%']);
+            });
+        }
+
+        if ($location) {
+            $query->where(function ($q) use ($location) {
+                $q->whereRaw('LOWER(address) like ?', ['%'.$location.'%'])
+                    ->orWhereRaw('LOWER(city) like ?', ['%'.$location.'%'])
+                    ->orWhereRaw('LOWER(state) like ?', ['%'.$location.'%'])
+                    ->orWhereRaw('LOWER(zipcode) like ?', ['%'.$location.'%']);
+            });
+        }
+
+        return $query->paginate(9);
     }
 }

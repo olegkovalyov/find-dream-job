@@ -2,62 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Applicant;
-use Illuminate\Http\Request;
+use App\Http\Requests\Applicant\ApplicantCreateRequest;
 use App\Models\Job;
+use App\Services\Contracts\ApplicantServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApplicantController extends Controller
 {
+    public function __construct(
+        private readonly ApplicantServiceInterface $applicantService
+    ) {
+    }
 
-    public function store(Request $request, Job $job): RedirectResponse
+    public function store(ApplicantCreateRequest $request, Job $job): RedirectResponse
     {
-        $existingApplication = Applicant::where('job_id', $job->id)
-            ->where('user_id', auth()->id())
-            ->exists();
-
-        if ($existingApplication) {
-            return redirect()->back()->with('error', 'You have already applied to this job');
+        if ($this->applicantService->doesApplicantExist($job->id, auth()->id())) {
+            return redirect()->back()
+                ->with('error', 'You have already applied to this job');
         }
 
-        // Validate incoming data
-        $validatedData = $request->validate([
-            'full_name' => 'required|string',
-            'contact_phone' => 'string',
-            'contact_email' => 'required|string|email',
-            'message' => 'string',
-            'location' => 'string',
-            'resume' => 'required|file|mimes:pdf|max:2048',
-        ]);
+        $this->applicantService->applyToJob(
+            request: $request,
+            jobId: $job->id,
+            userId: auth()->id()
+        );
 
-        // Handle resume uplaod
-        if ($request->hasFile('resume')) {
-            $path = $request->file('resume')->store('resumes', 'public');
-            $validatedData['resume'] = basename($path);
-        }
-
-        // Store the application
-        $application = new Applicant($validatedData);
-        $application->job_id = $job->id;
-        $application->user_id = auth()->id();
-        $application->save();
-
-        return redirect()->back()->with('success', 'Your application has been submitted');
+        return redirect()->back()
+            ->with('success', 'You successfully applied to this job');
     }
 
     public function destroy($id): RedirectResponse
     {
-        $applicant = Applicant::findOrFail($id);
-        $applicant->delete();
-        return redirect()->route('dashboard.index')->with('success', 'Applicant deleted successfully!');
+        $this->applicantService->delete($id);
+        return redirect()->route('dashboard.index')
+            ->with('success', 'Applicant deleted successfully!');
     }
 
     public function download(int $applicantId): RedirectResponse|StreamedResponse
     {
-        $applicant = Applicant::find($applicantId);
-        if (!$applicantId) {
+        $applicant = $this->applicantService->getApplicantById($applicantId);
+        if (!$applicant) {
             return redirect()->back()->with('error', 'Failed to download resume');
         }
         return Storage::download('/resumes/'.$applicant->resume);
