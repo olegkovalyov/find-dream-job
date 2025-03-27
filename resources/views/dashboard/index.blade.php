@@ -23,7 +23,7 @@
                 <x-form.file id="avatar" name="avatar" label="Upload Avatar" />
 
                 <button type="submit"
-                        class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 border rounded focus:outline-none">Save</button>
+                        class="cursor-pointer w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 border rounded focus:outline-none">Save</button>
             </form>
         </div>
 
@@ -45,7 +45,7 @@
                               onsubmit="return confirm('Are you sure that you want to delete this job?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded text-sm">
+                            <button type="submit" class="cursor-pointer px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded text-sm">
                                 Delete
                             </button>
                         </form>

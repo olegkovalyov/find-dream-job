@@ -18,11 +18,16 @@ class RandomUserSeeder extends Seeder
         File::makeDirectory('storage/app/public/avatars');
         File::copy('resources/images/default-avatar.png', 'storage/app/public/avatars/default-avatar.png');
         User::create([
-            'name' => 'Oleh Kovalov',
-            'email' => 'tester@test.com',
+            'name' => 'John Doe',
+            'email' => 'user1@test.com',
             'password' => Hash::make('12345678ok'),
         ]);
-        User::factory(10)->create();
+        User::create([
+            'name' => 'Bruce Lee',
+            'email' => 'user2@test.com',
+            'password' => Hash::make('12345678ok'),
+        ]);
+        User::factory(5)->create();
         echo 'Users created successfully!';
     }
 }

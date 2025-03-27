@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\JobStoreRequest;
-use App\Http\Requests\JobUpdateRequest;
+use App\Http\Requests\Job\JobStoreRequest;
+use App\Http\Requests\Job\JobUpdateRequest;
 use App\Models\Job;
 use App\Services\Contracts\JobServiceInterface;
 use Illuminate\Http\RedirectResponse;
@@ -89,28 +89,7 @@ class JobController extends Controller
     {
         $keywords = strtolower($request->input('keywords'));
         $location = strtolower($request->input('location'));
-
-        $query = Job::query();
-
-        if ($keywords) {
-            $query->where(function ($q) use ($keywords) {
-                $q->whereRaw('LOWER(title) like ?', ['%'.$keywords.'%'])
-                    ->orWhereRaw('LOWER(description) like ?', ['%'.$keywords.'%'])
-                    ->orWhereRaw('LOWER(tags) like ?', ['%'.$keywords.'%']);
-            });
-        }
-
-        if ($location) {
-            $query->where(function ($q) use ($location) {
-                $q->whereRaw('LOWER(address) like ?', ['%'.$location.'%'])
-                    ->orWhereRaw('LOWER(city) like ?', ['%'.$location.'%'])
-                    ->orWhereRaw('LOWER(state) like ?', ['%'.$location.'%'])
-                    ->orWhereRaw('LOWER(zipcode) like ?', ['%'.$location.'%']);
-            });
-        }
-
-        $jobs = $query->paginate(9);
-
+        $jobs = $this->jobService->search($location, $keywords);
         return view('jobs.index')->with('jobs', $jobs);
     }
 

@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Job;
+use App\Services\Contracts\JobServiceInterface;
 
 class HomeController extends Controller
 {
+    public function __construct(
+        private readonly JobServiceInterface $jobService
+    ) {
+    }
+
     public function index()
     {
-        $jobs = Job::latest()->limit(6)->get();
+        $jobs = $this->jobService->loadForHomePage();
         return view('home.index', compact(['jobs']));
     }
 }
